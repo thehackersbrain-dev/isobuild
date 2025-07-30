@@ -1,0 +1,45 @@
+name: Build and Release the ISO
+
+on:
+  schedule:
+    - cron: "30 22 * * 0"
+  workflow_dispatch:
+
+env:
+  BUILD_DIR: berserk-build
+  ISO_REPO: https://github.com/berserkarch/berserk-vm-xfce.git
+  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+  REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+  DIRECTORY_ID: ${{ vars.DIRECTORY_ID }}
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/berserkarch/berserkarch:base-devel
+      options: >-
+        --security-opt seccomp=unconfined
+        --privileged
+        --name berserkarch
+        --hostname berserk
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update and Sync System
+        run: |
+          sudo pacman -Syyu --noconfirm
+
+      - name: Clone and build the repo
+        run: |
+          git clone $ISO_REPO
+          cd berserk-vm-xfce
+          make devbuild
+
+      - name: Find ISO
+        id: iso
+        run: echo "file=$(ls berserk-vm-xfce/out/*.iso)" >> $GITHUB_OUTPUT
+
+      - name: Upload ISO to Google Drive
+        run: |
+          updrive -f ${{ steps.iso.outputs.file }}
