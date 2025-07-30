@@ -32,7 +32,7 @@ jobs:
 
       - name: Clone and build the repo
         run: |
-          echo test1.txt
+          echo test > test1.txt
       #     git clone $ISO_REPO
       #     cd berserkarch
       #     make devbuild
