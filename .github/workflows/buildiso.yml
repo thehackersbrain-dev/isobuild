@@ -38,7 +38,7 @@ jobs:
       #     make devbuild
       - name: Find ISO
         id: iso
-        run: echo "file=$(ls -R */test1.txt)" >> $GITHUB_OUTPUT
+        run: echo "file=$(ls -R *.txt)" >> $GITHUB_OUTPUT
         # run: echo "file=$(ls berserkarch/out/*.iso)" >> $GITHUB_OUTPUT
 
       - name: Upload ISO to Google Drive
