@@ -33,14 +33,13 @@ jobs:
       - name: Clone and build the repo
         run: |
           echo test1.txt
-          updrive -f test1.txt
       #     git clone $ISO_REPO
       #     cd berserkarch
       #     make devbuild
-
-      # - name: Find ISO
-      #   id: iso
-      #   run: echo "file=$(ls berserkarch/out/*.iso)" >> $GITHUB_OUTPUT
+      - name: Find ISO
+        id: iso
+        run: echo "file=$(ls -R */test1.txt)" >> $GITHUB_OUTPUT
+        # run: echo "file=$(ls berserkarch/out/*.iso)" >> $GITHUB_OUTPUT
 
       - name: Upload ISO to Google Drive
         run: |
