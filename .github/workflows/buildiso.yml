@@ -7,7 +7,7 @@ on:
 
 env:
   BUILD_DIR: berserk-build
-  ISO_REPO: https://github.com/berserkarch/berserk-vm-xfce.git
+  ISO_REPO: https://github.com/berserkarch/berserkarch.git
   CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
   REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
   DIRECTORY_ID: ${{ vars.DIRECTORY_ID }}
@@ -32,13 +32,15 @@ jobs:
 
       - name: Clone and build the repo
         run: |
-          git clone $ISO_REPO
-          cd berserk-vm-xfce
-          make devbuild
+          echo test1.txt
+          updrive -f test1.txt
+      #     git clone $ISO_REPO
+      #     cd berserkarch
+      #     make devbuild
 
-      - name: Find ISO
-        id: iso
-        run: echo "file=$(ls berserk-vm-xfce/out/*.iso)" >> $GITHUB_OUTPUT
+      # - name: Find ISO
+      #   id: iso
+      #   run: echo "file=$(ls berserkarch/out/*.iso)" >> $GITHUB_OUTPUT
 
       - name: Upload ISO to Google Drive
         run: |
