@@ -1,7 +1,6 @@
-name: Build and Release the ISO - TestBuild
+name: Build and Release the ISO
+
 on:
-  schedule:
-    - cron: "30 22 * * 0"
   workflow_dispatch:
 
 env:
@@ -17,53 +16,29 @@ jobs:
     container:
       image: docker.io/berserkarch/berserkarch:base-devel
       options: >-
-        --privileged
-        --cap-add=ALL
-        --device=/dev/loop-control
-        --device=/dev/loop0
-        --device=/dev/loop1
-        --device=/dev/loop2
-        --device=/dev/loop3
-        --device=/dev/loop4
-        --device=/dev/loop5
-        --device=/dev/loop6
-        --device=/dev/loop7
         --security-opt seccomp=unconfined
-        --security-opt apparmor=unconfined
+        --privileged
         --name berserkarch
         --hostname berserk
-        -v /sys/fs/cgroup:/sys/fs/cgroup:rw
-        --cgroupns=host
-        
+
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Loop Devices
-        run: |
-          # Ensure loop devices exist
-          for i in {0..7}; do
-            mknod -m 0660 /dev/loop$i b 7 $i 2>/dev/null || true
-          done
-          ls -la /dev/loop* || true
-          
+
       - name: Update and Sync System
         run: |
-          pacman -Syyu --noconfirm
-          
-      - name: Install Required Tools
-        run: |
-          pacman -S --noconfirm archiso squashfs-tools
-          
+          sudo pacman -Syyu --noconfirm
+          sudo pacman -Si archiso --noconfirm
+
       - name: Clone and build the repo
         run: |
           git clone $ISO_REPO
           cd berserkarch
           make devbuild
-          
+
       - name: Find ISO
         id: iso
         run: echo "file=$(ls berserkarch/out/*.iso)" >> $GITHUB_OUTPUT
-        
+
       - name: Upload ISO to Google Drive
         run: |
           updrive -f ${{ steps.iso.outputs.file }}
