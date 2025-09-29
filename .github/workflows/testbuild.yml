@@ -1,4 +1,4 @@
-name: Build and Release the ISO
+name: Build and Release the ISO - TestBuild
 
 on:
   workflow_dispatch:
