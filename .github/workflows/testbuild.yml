@@ -27,7 +27,7 @@ jobs:
       - name: Update and Sync System
         run: |
           sudo pacman -Syyu --noconfirm
-          sudo pacman -Si archiso --noconfirm
+          sudo pacman -U https://archive.archlinux.org/packages/a/archiso/archiso-85-1-any.pkg.tar.zst --noconfirm
 
       - name: Clone and build the repo
         run: |
